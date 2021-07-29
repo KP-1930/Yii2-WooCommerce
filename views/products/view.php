@@ -2,11 +2,16 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use session;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Products */
 
 ?>
+
+<?= Yii::$app->session->getFlash('success') ?>
+<?= Yii::$app->session->getFlash('error') ?>
+
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 <a href="index" class="btn btn-primary float-right" style="float:right;margin-bottom:30px;">BACK</a>
 <div class="products-view">

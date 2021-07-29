@@ -12,6 +12,8 @@ use app\models\ContactForm;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
+
+
 class SiteController extends Controller
 {
     /**
@@ -38,6 +40,7 @@ class SiteController extends Controller
                 ],
             ],
         ];
+       
     }
 
     /**
@@ -142,4 +145,10 @@ class SiteController extends Controller
         ]);
     }
 
-}
+    public function actionForgotPassword(){
+        
+         return $this->render('forgot-password');
+    }
+
+   }
+?>

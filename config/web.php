@@ -22,8 +22,7 @@ $config = [
             
             
         ],
-
-      
+ 
 
 
         'request' => [
@@ -42,6 +41,14 @@ $config = [
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
+            'transport' => [
+             'class' => 'Swift_SmtpTransport',
+             'host' => 'localhost',  // e.g. smtp.mandrillapp.com or smtp.gmail.com
+             'username' => 'ahirkp1997@gmail.com',
+             'password' => '9974245206',
+             'port' => '587', // Port 25 is a very common port too
+             'encryption' => 'tls', // It is often used, check your provider or mail server specs
+         ],
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
@@ -57,6 +64,13 @@ $config = [
             ],
         ],
         'db' => $db,
+
+        'authManager' => [
+
+            'class' => 'yii\rbac\DbManager',
+            'defaultRoles' => ['guest'],            // role based Authorization
+
+        ],
         
         'urlManager' => [
             'enablePrettyUrl' => true,

@@ -37,6 +37,13 @@ $this->params['breadcrumbs'][] = $this->title;
                  <a href="index" class="btn btn-danger">Cancel</a>
             </div>
         </div>
+        <div class="form-group">
+            <div class="col-lg-3">
+                <a href="forgot-password">Forgot Password</a>
+            </div>
+        </div> 
+
+        
 
     <?php ActiveForm::end(); ?>
 

@@ -20,7 +20,7 @@ class Products extends \yii\db\ActiveRecord
      * {@inheritdoc}
      */
     
-    const IMAGE_PLACEHOLDER = '/uploads/default_user.jpg';
+    const IMAGE_PLACEHOLDER = '../uploads/default_user.jpg';
 
     
     public static function tableName()
@@ -83,15 +83,15 @@ class Products extends \yii\db\ActiveRecord
         }
 
 
-        public function deleteImage() {
-            $image = Yii::$app->basePath . '/uploads/' . $this->image;
-            if (unlink($image)) {
-                $this->image = null;
-                $this->save();
-                return true;
-            }
-            return false;
-        }
+        // public function deleteImage() {
+        //     $image = Yii::$app->basePath . '/uploads/' . $this->image;
+        //     if (unlink($image)) {
+        //         $this->image = null;
+        //         $this->save();
+        //         return true;
+        //     }
+        //     return false;
+        // }
 
 
     

@@ -62,8 +62,7 @@ use yii\widgets\ActiveForm;
 <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
   data-name="TEST User"
   data-description="Testing"
-       
-  data-amount="<?php echo $model->updated_price; ?>"
+  data-amount="<?php echo "$model->updated_price";?>
   data-locale="auto">
 
  </script>
@@ -143,13 +142,25 @@ use yii\widgets\ActiveForm;
                 }
                 
             })
-            
-            
+
             }
 
+
+
+            
     });
-       
+
+
+      
+
 </script>
 
+
+
+
+     
+
+
+   
 
 

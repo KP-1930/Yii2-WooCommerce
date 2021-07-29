@@ -11,7 +11,8 @@ use yii\filters\VerbFilter;
 use app\models\ProductsSearch;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
-
+use yii\web\ForbiddenHttpException;
+use session;
 
 /**
  * ProductsController implements the CRUD actions for Products model.
@@ -22,29 +23,7 @@ class ProductsController extends Controller
      * {@inheritdoc}
      */
 
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::classname(),
-                'only' => ['create','update','delete'],
-                'rules'=>[
-                    [
-                    'allow'=>true,
-                    'roles'=>['@']
-                ],
-            ]
-            
-        ],
-
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+    
 
     /**
      * Lists all Products models.
@@ -83,7 +62,10 @@ class ProductsController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Products();
+
+        if(Yii::$app->user->can('create-product')) {
+
+            $model = new Products();
 
         if ($model->load(Yii::$app->request->post())) {
 
@@ -96,12 +78,21 @@ class ProductsController extends Controller
             $model->image = $fileName;
 
             $model->save();
+            Yii::$app->session->setFlash('success', "Product created successfully."); 
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
             'model' => $model,
         ]);
+
+        }
+        else {
+
+            throw new ForbiddenHttpException("You Are Not Perform This Action...");
+            
+        }
+        
     }
 
     /**
@@ -114,13 +105,11 @@ class ProductsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        // $image = $model->image;
-        
-        // echo "<pre>";
-        // print_r($image);
-        // die;
 
-        if ($model->load(Yii::$app->request->post()) ) {
+        
+        if(Yii::$app->user->can('update-product')) {
+
+            if ($model->load(Yii::$app->request->post()) ) {
             $model->image = UploadedFile::getInstance($model,'image');
             
             $fileName = time().'.'.$model->image->extension; 
@@ -130,12 +119,21 @@ class ProductsController extends Controller
             $model->image = $fileName;
 
             $model->save();
+            Yii::$app->session->setFlash('success', "Product Updated successfully."); 
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
         ]);
+
+        } else {
+
+            throw new ForbiddenHttpException("You Are Not Perform This Action... ");
+            
+        }
+        
     }
 
     /**
@@ -147,9 +145,22 @@ class ProductsController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        
+        if(Yii::$app->user->can('delete-product')) {    
+            $model = $this->findModel($id);  
+            $oldThumb = Yii::$app->basePath . '/web/uploads/' . $model->image;
+            unlink($oldThumb);
+            $model->delete();
+            Yii::$app->session->setFlash('error', "Product Deleted successfully."); 
 
-        return $this->redirect(['index']);
+  
+            return $this->redirect(['index']);
+        }
+        else {
+            throw new ForbiddenHttpException("You Are Not Perform This Action... ");
+
+        }
+
     }
 
     /**
@@ -200,22 +211,24 @@ class ProductsController extends Controller
     public function actionAjax()
     {
         $model =  Products::findOne(Yii::$app->request->post('id'));
-
-        // echo "<pre>";
-        // print_r(Yii::$app->request->post());
-        // die;
         if (Yii::$app->request->post('data')){
             $model->updated_price = Yii::$app->request->post('data');
             $model->save();
-            $data = "Successfully Added";
+            $data = $model->updated_price;
         }
         else {
             $data = "Ajax Does Not  Work!";
         }
-    
-
-        return \yii\helpers\Json::encode($data);
+        return $data;
     }
+
+    
+    // public function actionDeleteImage($id) {
+    //     $model = Products::findOne($id);
+    //     unlink(Yii::$app->basePath . '/uploads/' . $model->image);
+    //     $this->findModel($id)->delete();
+    //     return $this->redirect(['index']);  
+    // }
 
       
     
